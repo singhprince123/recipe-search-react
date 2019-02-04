@@ -14,13 +14,20 @@ class App extends Component {
     pageIndex: 1,
     search: '',
     query: '&q=',
-    error: ''
+    error: '',
+    limit: false
   }
 
  async getRecipes() {
   try{
     const  data = await fetch(this.state.url);
     const jsonData = await data.json();
+  
+    if(jsonData.error){
+       this.setState({
+         limit: true
+       })
+    }
     if(jsonData.recipes.length === 0){
       this.setState(()=> {
         return{error: 'sorry, but your search did not return any result'}
@@ -50,11 +57,14 @@ displayPage = (index) => {
       value = { this.state.search}
       handleChange ={this.handleChange}
       handleSubmit = {this.handleSubmit}
-      error={this.state.error}/>);
+      error={this.state.error}
+      limit={this.state.limit}/>);
 
     case 0: 
     return( <RecipeDetails id={this.state.details_id}
-      handleIndex = {this.handleIndex}/>)
+      handleIndex = {this.handleIndex}
+      limit={this.state.limit}
+      />)
   }
 }
 
@@ -90,6 +100,7 @@ render() {
 
     return (
       <React.Fragment>
+        
        {this.displayPage(this.state.pageIndex)}
       </React.Fragment>
     );
