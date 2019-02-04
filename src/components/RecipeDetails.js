@@ -1,5 +1,7 @@
 import React, { Component } from "react";
  import { recipe } from "../tempDetail";
+import LimitExceed from "./LimitExceed";
+import Loader from "./Loader";
 
 export default class RecipeDetails extends Component {
   // constructor(props){
@@ -12,7 +14,8 @@ export default class RecipeDetails extends Component {
   // }
 
   state = {
-    recipe: recipe
+    recipe: [],
+    limit: false
   };
 
   async getDetail() {
@@ -34,8 +37,8 @@ export default class RecipeDetails extends Component {
       });
      }
      
-    } catch (error) {
-      
+    } catch(error){
+       console.log(error)
     }
   }
 
@@ -45,11 +48,12 @@ export default class RecipeDetails extends Component {
   }
 
   render() {
-   
-    if(this.props.limit && !this.state.recipe){
-      return( <div className="container mx-auto my-5 text-center">
-               <h1 style={{border: "1px solid black", textAlign: 'center'}}>Loading Details...</h1>
-             </div>)
+    if(this.state.recipe.length === 0){
+       return (<Loader />)
+    }
+    if(this.state.limit ){
+      console.log("if ", this.state.limit)
+      return( <LimitExceed />)
     }else{
       const {
         image_url,
